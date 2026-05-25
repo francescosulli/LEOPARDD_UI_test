@@ -1,0 +1,181 @@
+{
+  "generatedAt": "2026-05-01T00:00:00.000Z",
+  "templates": [
+    {
+      "name": "COSMOS 2251 DEB SAMPLE A",
+      "noradId": "91001",
+      "inclinationDeg": 74.02,
+      "raanDeg": 14.8,
+      "eccentricity": 0.0048,
+      "argumentOfPerigeeDeg": 144.4,
+      "meanAnomalyDeg": 215.2,
+      "meanMotionRevPerDay": 14.42,
+      "bstar": "62000-4"
+    },
+    {
+      "name": "COSMOS 2251 DEB SAMPLE B",
+      "noradId": "91027",
+      "inclinationDeg": 74.12,
+      "raanDeg": 86.2,
+      "eccentricity": 0.0071,
+      "argumentOfPerigeeDeg": 36.1,
+      "meanAnomalyDeg": 318.5,
+      "meanMotionRevPerDay": 14.18,
+      "bstar": "71000-4"
+    },
+    {
+      "name": "IRIDIUM 33 DEB SAMPLE A",
+      "noradId": "91110",
+      "inclinationDeg": 86.33,
+      "raanDeg": 221.4,
+      "eccentricity": 0.0026,
+      "argumentOfPerigeeDeg": 112.9,
+      "meanAnomalyDeg": 251.7,
+      "meanMotionRevPerDay": 14.25,
+      "bstar": "53000-4"
+    },
+    {
+      "name": "IRIDIUM 33 DEB SAMPLE B",
+      "noradId": "91144",
+      "inclinationDeg": 86.41,
+      "raanDeg": 288.6,
+      "eccentricity": 0.0094,
+      "argumentOfPerigeeDeg": 74.2,
+      "meanAnomalyDeg": 49.6,
+      "meanMotionRevPerDay": 14.05,
+      "bstar": "48000-4"
+    },
+    {
+      "name": "FENGYUN 1C DEB SAMPLE A",
+      "noradId": "91201",
+      "inclinationDeg": 98.65,
+      "raanDeg": 43.7,
+      "eccentricity": 0.0014,
+      "argumentOfPerigeeDeg": 206.8,
+      "meanAnomalyDeg": 153.1,
+      "meanMotionRevPerDay": 14.12,
+      "bstar": "39000-4"
+    },
+    {
+      "name": "FENGYUN 1C DEB SAMPLE B",
+      "noradId": "91239",
+      "inclinationDeg": 98.83,
+      "raanDeg": 173.3,
+      "eccentricity": 0.0063,
+      "argumentOfPerigeeDeg": 18.8,
+      "meanAnomalyDeg": 342.5,
+      "meanMotionRevPerDay": 13.92,
+      "bstar": "44000-4"
+    },
+    {
+      "name": "COSMOS 1408 DEB SAMPLE A",
+      "noradId": "91308",
+      "inclinationDeg": 82.49,
+      "raanDeg": 309.1,
+      "eccentricity": 0.0031,
+      "argumentOfPerigeeDeg": 265.7,
+      "meanAnomalyDeg": 92.1,
+      "meanMotionRevPerDay": 14.78,
+      "bstar": "86000-4"
+    },
+    {
+      "name": "COSMOS 1408 DEB SAMPLE B",
+      "noradId": "91331",
+      "inclinationDeg": 82.62,
+      "raanDeg": 132.5,
+      "eccentricity": 0.0112,
+      "argumentOfPerigeeDeg": 315.4,
+      "meanAnomalyDeg": 44.8,
+      "meanMotionRevPerDay": 14.54,
+      "bstar": "94000-4"
+    },
+    {
+      "name": "LEO FRAGMENT SAMPLE 01",
+      "noradId": "91400",
+      "inclinationDeg": 63.41,
+      "raanDeg": 18.9,
+      "eccentricity": 0.014,
+      "argumentOfPerigeeDeg": 128.6,
+      "meanAnomalyDeg": 267.4,
+      "meanMotionRevPerDay": 13.74,
+      "bstar": "35000-4"
+    },
+    {
+      "name": "LEO FRAGMENT SAMPLE 02",
+      "noradId": "91436",
+      "inclinationDeg": 70.19,
+      "raanDeg": 251.2,
+      "eccentricity": 0.0055,
+      "argumentOfPerigeeDeg": 6.4,
+      "meanAnomalyDeg": 21.9,
+      "meanMotionRevPerDay": 14.66,
+      "bstar": "67000-4"
+    },
+    {
+      "name": "LEO FRAGMENT SAMPLE 03",
+      "noradId": "91478",
+      "inclinationDeg": 52.08,
+      "raanDeg": 310.7,
+      "eccentricity": 0.0019,
+      "argumentOfPerigeeDeg": 244.7,
+      "meanAnomalyDeg": 113.8,
+      "meanMotionRevPerDay": 15.08,
+      "bstar": "79000-4"
+    },
+    {
+      "name": "LEO FRAGMENT SAMPLE 04",
+      "noradId": "91514",
+      "inclinationDeg": 97.42,
+      "raanDeg": 79.4,
+      "eccentricity": 0.017,
+      "argumentOfPerigeeDeg": 81.2,
+      "meanAnomalyDeg": 302.7,
+      "meanMotionRevPerDay": 13.58,
+      "bstar": "42000-4"
+    },
+    {
+      "name": "LEO FRAGMENT SAMPLE 05",
+      "noradId": "91558",
+      "inclinationDeg": 56.72,
+      "raanDeg": 160.6,
+      "eccentricity": 0.0037,
+      "argumentOfPerigeeDeg": 331.1,
+      "meanAnomalyDeg": 78.2,
+      "meanMotionRevPerDay": 14.91,
+      "bstar": "61000-4"
+    },
+    {
+      "name": "LEO FRAGMENT SAMPLE 06",
+      "noradId": "91599",
+      "inclinationDeg": 66.18,
+      "raanDeg": 213.2,
+      "eccentricity": 0.0081,
+      "argumentOfPerigeeDeg": 184.8,
+      "meanAnomalyDeg": 171.5,
+      "meanMotionRevPerDay": 14.36,
+      "bstar": "55000-4"
+    },
+    {
+      "name": "SUN-SYNC FRAGMENT SAMPLE 01",
+      "noradId": "91633",
+      "inclinationDeg": 99.08,
+      "raanDeg": 347.8,
+      "eccentricity": 0.0022,
+      "argumentOfPerigeeDeg": 52.6,
+      "meanAnomalyDeg": 198.4,
+      "meanMotionRevPerDay": 14.01,
+      "bstar": "37000-4"
+    },
+    {
+      "name": "SUN-SYNC FRAGMENT SAMPLE 02",
+      "noradId": "91679",
+      "inclinationDeg": 100.11,
+      "raanDeg": 112.6,
+      "eccentricity": 0.0124,
+      "argumentOfPerigeeDeg": 271.3,
+      "meanAnomalyDeg": 16.8,
+      "meanMotionRevPerDay": 13.69,
+      "bstar": "46000-4"
+    }
+  ]
+}
