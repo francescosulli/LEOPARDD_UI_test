@@ -6,8 +6,8 @@ import { EARTH_SCENE_RADIUS } from '../utils/math';
 
 export default function Earth() {
   const [earthTexture, cloudTexture] = useTexture([
-    '/textures/earth_atmos_2048.jpg',
-    '/textures/earth_clouds_1024.png',
+    `${import.meta.env.BASE_URL}textures/earth_atmos_2048.jpg`,
+    `${import.meta.env.BASE_URL}textures/earth_clouds_1024.png`,
   ]);
   const groupRef = useRef<Group>(null);
   const cloudRef = useRef<Mesh>(null);

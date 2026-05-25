@@ -13,10 +13,10 @@ const LIVE_GROUPS = [
 ];
 
 const LOCAL_TLE_GROUPS = [
-  { group: 'cosmos-2251-debris', path: '/data/celestrak_cosmos_2251_debris.tle' },
-  { group: 'iridium-33-debris', path: '/data/celestrak_iridium_33_debris.tle' },
-  { group: 'fengyun-1c-debris', path: '/data/celestrak_fengyun_1c_debris.tle' },
-  { group: 'cosmos-1408-debris', path: '/data/celestrak_cosmos_1408_debris.tle' },
+  { group: 'cosmos-2251-debris', path: `${import.meta.env.BASE_URL}data/celestrak_cosmos_2251_debris.tle` },
+  { group: 'iridium-33-debris', path: `${import.meta.env.BASE_URL}data/celestrak_iridium_33_debris.tle` },
+  { group: 'fengyun-1c-debris', path: `${import.meta.env.BASE_URL}data/celestrak_fengyun_1c_debris.tle` },
+  { group: 'cosmos-1408-debris', path: `${import.meta.env.BASE_URL}data/celestrak_cosmos_1408_debris.tle` },
 ];
 
 const CELESTRAK_BASE_URL = 'https://celestrak.org/NORAD/elements/gp.php';
@@ -354,7 +354,7 @@ async function fetchCachedCatalog(maxObjects: number) {
     return tleObjects;
   }
 
-  const response = await fetch('/data/debris_sample.json');
+  const response = await fetch(`${import.meta.env.BASE_URL}data/debris_sample.json`);
 
   if (!response.ok) {
     throw new Error('Dataset locale non disponibile.');
