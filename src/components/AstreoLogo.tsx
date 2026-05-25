@@ -11,7 +11,7 @@ export default function AstreoLogo({ compact = false }: AstreoLogoProps) {
     <div className="flex items-center gap-3">
       {imageAvailable ? (
         <img
-          src="/astreo-logo.svg"
+          src={`${import.meta.env.BASE_URL}astreo-logo.svg`}
           alt="Team ASTREO"
           className={compact ? 'h-auto w-32 sm:w-36' : 'h-auto w-40 sm:w-48'}
           onError={() => setImageAvailable(false)}
