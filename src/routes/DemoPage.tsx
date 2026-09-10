@@ -254,6 +254,23 @@ export default function DemoPage() {
     runPropagation(true);
   }, [runPropagation]);
 
+  const handleJumpToTca = useCallback(
+    (timestamp: number) => {
+      if (!debrisFrames.length) return;
+      let bestIdx = 0;
+      let bestDiff = Number.POSITIVE_INFINITY;
+      debrisFrames.forEach((frame, idx) => {
+        const diff = Math.abs(frame.timestamp - timestamp);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestIdx = idx;
+        }
+      });
+      setFrameIndex(bestIdx);
+    },
+    [debrisFrames],
+  );
+
   const userTrail = userStates.length > 1 ? userStates : [];
 
   return (
@@ -265,6 +282,8 @@ export default function DemoPage() {
         userState={currentUserState}
         userTrail={userTrail}
         selectedEvent={selectedEvent}
+        currentTimestamp={currentFrame?.timestamp}
+        onJumpToTca={handleJumpToTca}
         isLoading={isLoadingCatalog || isPropagating}
       />
       <TopBar
@@ -299,6 +318,7 @@ export default function DemoPage() {
             onSelect={(event) => setSelectedEventId(event.id)}
             isPropagating={isPropagating}
             onRunScenario={handleScenario}
+            onJumpToTca={handleJumpToTca}
           />
         </div>
       </div>

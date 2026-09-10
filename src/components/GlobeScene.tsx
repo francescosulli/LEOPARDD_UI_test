@@ -2,6 +2,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Line, OrbitControls, Stars } from '@react-three/drei';
 import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { Color, Vector3 } from 'three';
+import ConjunctionMarker3D from './ConjunctionMarker3D';
 import DebrisCloud from './DebrisCloud';
 import Earth from './Earth';
 import OrbitTrail from './OrbitTrail';
@@ -17,16 +18,16 @@ type GlobeSceneProps = {
   userState?: SatelliteState;
   userTrail: SatelliteState[];
   selectedEvent?: ConjunctionEvent | null;
+  currentTimestamp?: number;
+  onJumpToTca?: (timestamp: number) => void;
   isLoading?: boolean;
 };
 
 function SceneLights() {
   return (
     <>
-      <ambientLight intensity={0.65} />
-      <directionalLight position={[6, 4, 7]} intensity={1.8} color="#fff7ed" />
-      <directionalLight position={[-6, -3, -6]} intensity={0.7} color="#93c5fd" />
-      <pointLight position={[-5, -4, -3]} intensity={0.7} color="#ef7d17" />
+      <ambientLight intensity={1.1} />
+      <directionalLight position={[6, 4, 7]} intensity={1.2} color="#ffffff" />
     </>
   );
 }
@@ -126,6 +127,8 @@ export default function GlobeScene({
   userState,
   userTrail,
   selectedEvent,
+  currentTimestamp,
+  onJumpToTca,
   isLoading,
 }: GlobeSceneProps) {
   const { t } = useLanguage();
@@ -165,7 +168,13 @@ export default function GlobeScene({
           <OrbitTrail states={userTrail} color="#ff9b3d" opacity={0.92} />
           <OrbitTrail points={selectedDebrisTrail} color="#fff7ed" opacity={0.46} />
           <SatelliteMarker state={userState} />
-          <RiskConnector selectedEvent={selectedEvent} />
+          {selectedEvent ? (
+            <ConjunctionMarker3D
+              event={selectedEvent}
+              currentTimestamp={currentTimestamp}
+              onJumpToTca={onJumpToTca}
+            />
+          ) : null}
           <FocusController selectedEvent={selectedEvent} />
           <OrbitControls
             makeDefault

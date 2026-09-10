@@ -50,10 +50,6 @@ function AstreoGLBModel() {
 
   return (
     <group>
-      {/* Local fill light to ensure CAD/GLB textures shine brightly even in shadow */}
-      <pointLight position={[0.4, 0.5, 0.4]} intensity={1.5} color="#fff7ed" distance={3} />
-      <pointLight position={[-0.4, -0.3, -0.4]} intensity={0.8} color="#ef7d17" distance={3} />
-
       <group scale={scaleFactor}>
         <primitive object={clonedScene} position={centerOffset} />
       </group>
@@ -165,9 +161,6 @@ function HubbleModel() {
 function StarlinkModel() {
   return (
     <group scale={1.6}>
-      {/* Local ion thruster point light */}
-      <pointLight position={[0, 0, -0.1]} intensity={1.8} color="#00e5ff" distance={2} />
-
       {/* Flat-Pack Main Chassis (Distinctive Thin Rectangular Bus) */}
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[0.26, 0.022, 0.14]} />

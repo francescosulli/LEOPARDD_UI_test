@@ -16,6 +16,7 @@ type RiskPanelProps = {
   onSelect: (event: ConjunctionEvent) => void;
   isPropagating: boolean;
   onRunScenario?: () => void;
+  onJumpToTca?: (timestamp: number) => void;
 };
 
 export default function RiskPanel({
@@ -24,6 +25,7 @@ export default function RiskPanel({
   onSelect,
   isPropagating,
   onRunScenario,
+  onJumpToTca,
 }: RiskPanelProps) {
   const { language, t } = useLanguage();
 
@@ -131,6 +133,27 @@ export default function RiskPanel({
                       </span>
                     </div>
                   </div>
+
+                  {/* Selected Card Action: Jump to TCA & Info */}
+                  {selected && onJumpToTca ? (
+                    <div className="mt-2 flex items-center justify-between border-t border-white/10 pt-1.5 text-[0.65rem]">
+                      <span className="text-white/50">
+                        📍 {t('globe.altitude')}: ~{Math.max(100, Math.round(Math.sqrt(event.userPositionKm.x ** 2 + event.userPositionKm.y ** 2 + event.userPositionKm.z ** 2) - 6378))} km
+                      </span>
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onJumpToTca(event.closestApproachTime);
+                        }}
+                        className="inline-flex items-center gap-1 rounded bg-astro-orange/20 border border-astro-orange/50 px-2 py-0.5 font-semibold text-astro-cream hover:bg-astro-orange/35 transition active:scale-[0.98]"
+                      >
+                        <Crosshair size={10} className="text-astro-orange" />
+                        {t('globe.jumpToTca')}
+                      </span>
+                    </div>
+                  ) : null}
                 </button>
               );
             })}

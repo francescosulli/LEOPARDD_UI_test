@@ -55,6 +55,20 @@ export function formatDateTimeLong(timestamp: number, language: Language = 'it')
   }).format(new Date(timestamp));
 }
 
+export function formatDurationSeconds(seconds: number): string {
+  const abs = Math.abs(Math.round(seconds));
+  const h = Math.floor(abs / 3600);
+  const m = Math.floor((abs % 3600) / 60);
+  const s = Math.floor(abs % 60);
+  if (h > 0) {
+    return `${h}h ${m}m ${s}s`;
+  }
+  if (m > 0) {
+    return `${m}m ${s}s`;
+  }
+  return `${s}s`;
+}
+
 export function riskTone(level: RiskLevel) {
   const tones: Record<RiskLevel, string> = {
     Low: 'border-white/18 bg-white/[0.055] text-white',
@@ -65,3 +79,4 @@ export function riskTone(level: RiskLevel) {
 
   return tones[level];
 }
+

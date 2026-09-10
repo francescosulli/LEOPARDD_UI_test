@@ -379,6 +379,42 @@ export const translations = {
     it: 'Oggetti renderizzati',
     en: 'Objects rendered',
   },
+  'globe.conjunctionPoint': {
+    it: 'Punto di Congiunzione',
+    en: 'Conjunction Point',
+  },
+  'globe.closestApproachTca': {
+    it: 'Massimo Avvicinamento (TCA)',
+    en: 'Closest Approach (TCA)',
+  },
+  'globe.tcaIn': {
+    it: 'TCA tra',
+    en: 'TCA in',
+  },
+  'globe.tcaPassed': {
+    it: 'TCA superato da',
+    en: 'TCA passed',
+  },
+  'globe.tcaActive': {
+    it: 'PASSAGGIO CRITICO IN CORSO',
+    en: 'CRITICAL PASS IN PROGRESS',
+  },
+  'globe.jumpToTca': {
+    it: 'Salta all\'istante TCA',
+    en: 'Jump to TCA time',
+  },
+  'globe.minDistance': {
+    it: 'Distanza min.',
+    en: 'Min distance',
+  },
+  'globe.relVelocity': {
+    it: 'Vel. relativa',
+    en: 'Rel. velocity',
+  },
+  'globe.altitude': {
+    it: 'Quota',
+    en: 'Altitude',
+  },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
