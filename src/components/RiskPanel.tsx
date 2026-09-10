@@ -5,9 +5,10 @@ import {
   formatKm,
   formatPercent,
   formatVelocity,
-  riskLabel,
   riskTone,
 } from '../utils/formatting';
+import { useLanguage } from '../i18n/LanguageContext';
+import { translateRiskLabel } from '../i18n/translations';
 
 type RiskPanelProps = {
   events: ConjunctionEvent[];
@@ -24,6 +25,8 @@ export default function RiskPanel({
   isPropagating,
   onRunScenario,
 }: RiskPanelProps) {
+  const { language, t } = useLanguage();
+
   return (
     <section className="mission-panel pointer-events-auto flex h-full min-h-0 flex-col overflow-hidden rounded">
       {/* Top Header */}
@@ -31,16 +34,16 @@ export default function RiskPanel({
         <div className="flex items-center gap-2">
           <Crosshair size={15} className="text-astro-flame" />
           <span className="text-xs font-semibold uppercase tracking-[0.16em] text-white">
-            Possibili Congiunzioni & Rischio
+            {t('riskPanel.title')}
           </span>
         </div>
         {events.length ? (
           <span className="rounded border border-astro-orange/30 bg-astro-orange/15 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-astro-cream">
-            {events.length} {events.length === 1 ? 'Evento' : 'Eventi'}
+            {events.length} {events.length === 1 ? t('riskPanel.eventSingular') : t('riskPanel.eventPlural')}
           </span>
         ) : (
           <span className="rounded border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] text-white/50">
-            Top 10
+            {t('riskPanel.top10')}
           </span>
         )}
       </div>
@@ -51,7 +54,7 @@ export default function RiskPanel({
           <div className="grid h-32 place-items-center rounded border border-white/10 bg-white/[0.03] text-xs uppercase tracking-[0.18em] text-white/60">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 animate-ping rounded-full bg-astro-orange" />
-              Calcolo congiunzioni in corso...
+              {t('riskPanel.calculating')}
             </div>
           </div>
         ) : events.length ? (
@@ -82,8 +85,8 @@ export default function RiskPanel({
                         <p className="truncate text-xs font-bold text-white">{event.debrisName}</p>
                       </div>
                       <p className="mt-0.5 text-[0.62rem] font-medium uppercase tracking-[0.12em] text-white/50">
-                        NORAD {event.noradId ?? 'n.d.'}
-                        {event.isSynthetic ? ' · DEMO' : ''}
+                        {t('riskPanel.norad')} {event.noradId ?? t('riskPanel.na')}
+                        {event.isSynthetic ? ` · ${t('riskPanel.demoSuffix')}` : ''}
                       </p>
                     </div>
                     <span
@@ -97,32 +100,32 @@ export default function RiskPanel({
                               : 'bg-white/10 text-white/80'
                       }`}
                     >
-                      {riskLabel(event.riskLevel)}
+                      {translateRiskLabel(language, event.riskLevel)}
                     </span>
                   </div>
 
                   {/* Card Metrics Grid */}
                   <div className="mt-2 grid grid-cols-4 gap-1 rounded bg-black/25 p-1.5 text-[0.68rem]">
                     <div>
-                      <span className="block text-[0.58rem] uppercase text-white/45">Distanza</span>
+                      <span className="block text-[0.58rem] uppercase text-white/45">{t('riskPanel.distanceShort')}</span>
                       <span className="font-mono font-bold text-white">
-                        {formatKm(event.minDistanceKm, 1)}
+                        {formatKm(event.minDistanceKm, 1, language)}
                       </span>
                     </div>
                     <div>
-                      <span className="block text-[0.58rem] uppercase text-white/45">Vel. Rel.</span>
+                      <span className="block text-[0.58rem] uppercase text-white/45">{t('riskPanel.velRelShort')}</span>
                       <span className="font-mono font-semibold text-white/90">
-                        {formatVelocity(event.relativeVelocityKmS)}
+                        {formatVelocity(event.relativeVelocityKmS, language)}
                       </span>
                     </div>
                     <div>
-                      <span className="block text-[0.58rem] uppercase text-white/45">TCA</span>
+                      <span className="block text-[0.58rem] uppercase text-white/45">{t('riskPanel.tca')}</span>
                       <span className="font-mono text-white/80">
-                        {formatDateTime(event.closestApproachTime)}
+                        {formatDateTime(event.closestApproachTime, language)}
                       </span>
                     </div>
                     <div>
-                      <span className="block text-[0.58rem] uppercase text-white/45">Affidabilità</span>
+                      <span className="block text-[0.58rem] uppercase text-white/45">{t('riskPanel.confidenceShort')}</span>
                       <span className="font-mono text-astro-cream">
                         {formatPercent(event.confidence)}
                       </span>
@@ -136,9 +139,7 @@ export default function RiskPanel({
           <div className="grid min-h-28 place-items-center rounded border border-white/10 bg-white/[0.02] p-3 text-center">
             <div>
               <ShieldCheck className="mx-auto mb-1.5 text-emerald-400" size={22} />
-              <p className="text-xs font-medium text-white">
-                Nessuna congiunzione critica nell'orizzonte impostato.
-              </p>
+              <p className="text-xs font-medium text-white">{t('riskPanel.emptyState')}</p>
               {onRunScenario ? (
                 <button
                   type="button"
@@ -146,7 +147,7 @@ export default function RiskPanel({
                   className="mt-2.5 inline-flex items-center gap-1.5 rounded border border-astro-flame/40 bg-astro-flame/15 px-2.5 py-1 text-xs font-semibold text-astro-cream transition hover:bg-astro-flame/25"
                 >
                   <Sparkles size={13} />
-                  Simula Allerta Congiunzione
+                  {t('riskPanel.simulateAlert')}
                 </button>
               ) : null}
             </div>
@@ -158,7 +159,7 @@ export default function RiskPanel({
       <div className="border-t border-white/10 bg-black/20 px-3 py-2 text-[0.62rem] text-white/50">
         <div className="flex items-center gap-1.5 leading-relaxed">
           <AlertTriangle size={12} className="shrink-0 text-astro-flame" />
-          <span>Demo divulgativa. Score di rischio basato su distanze minime campionate in ECI.</span>
+          <span>{t('riskPanel.disclaimer')}</span>
         </div>
       </div>
     </section>

@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AstreoLogo from '../components/AstreoLogo';
+import LanguageToggle from '../components/LanguageToggle';
+import { useLanguage } from '../i18n/LanguageContext';
 
 function OrbitalBackdrop() {
   return (
@@ -19,13 +21,18 @@ function OrbitalBackdrop() {
 }
 
 export default function LandingPage() {
+  const { t } = useLanguage();
+
   return (
     <main className="relative h-screen overflow-hidden bg-astro-950 text-white">
       <OrbitalBackdrop />
-      <header className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between px-6 py-5 sm:px-8">
+      <header className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between gap-3 px-6 py-5 sm:px-8">
         <AstreoLogo />
-        <div className="hidden rounded border border-astro-orange/18 bg-white/[0.04] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/64 sm:block">
-          Demo pubblica non operativa
+        <div className="flex items-center gap-3">
+          <div className="hidden rounded border border-astro-orange/18 bg-white/[0.04] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/64 sm:block">
+            {t('landing.badge')}
+          </div>
+          <LanguageToggle />
         </div>
       </header>
 
@@ -57,7 +64,7 @@ export default function LandingPage() {
               to="/demo"
               className="mt-8 inline-flex h-12 items-center gap-3 rounded bg-astro-orange px-5 text-sm font-semibold text-astro-950 shadow-glow transition hover:translate-y-[-1px] hover:bg-white"
             >
-              Fai partire la demo
+              {t('landing.cta')}
               <ArrowRight size={18} />
             </Link>
           </motion.div>

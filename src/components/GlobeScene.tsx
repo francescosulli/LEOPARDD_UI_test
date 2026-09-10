@@ -8,6 +8,7 @@ import OrbitTrail from './OrbitTrail';
 import SatelliteMarker from './SatelliteMarker';
 import type { ConjunctionEvent, DebrisFrame, DebrisObject, SatelliteState, Vec3 } from '../types/orbital';
 import { kmToSceneTuple } from '../utils/math';
+import { useLanguage } from '../i18n/LanguageContext';
 
 type GlobeSceneProps = {
   debrisObjects: DebrisObject[];
@@ -124,6 +125,7 @@ export default function GlobeScene({
   userTrail,
   selectedEvent,
 }: GlobeSceneProps) {
+  const { t } = useLanguage();
   const selectedDebrisTrail = useMemo(() => {
     if (!selectedEvent) {
       return [];
@@ -177,7 +179,7 @@ export default function GlobeScene({
       <div className="pointer-events-none absolute inset-0 grid-mask opacity-60" />
       <div className="pointer-events-none absolute inset-0 scanlines" />
       <div className="pointer-events-none absolute left-5 top-24 rounded border border-astro-orange/15 bg-black/24 px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-white/70">
-        Oggetti renderizzati: {debrisObjects.length}
+        {t('globe.debrisRendered')}: {debrisObjects.length}
       </div>
     </div>
   );

@@ -1,18 +1,20 @@
 import { motion } from 'framer-motion';
 import { Radar } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 type LoadingOverlayProps = {
   visible: boolean;
   message?: string;
 };
 
-export default function LoadingOverlay({
-  visible,
-  message = 'Acquiring orbital catalog...',
-}: LoadingOverlayProps) {
+export default function LoadingOverlay({ visible, message }: LoadingOverlayProps) {
+  const { t } = useLanguage();
+
   if (!visible) {
     return null;
   }
+
+  const resolvedMessage = message ?? t('loading.acquiringCatalog');
 
   return (
     <div className="absolute inset-0 z-50 grid place-items-center bg-astro-950/86 backdrop-blur-xl">
@@ -28,7 +30,7 @@ export default function LoadingOverlay({
         >
           <Radar size={30} />
         </motion.div>
-        <p className="text-sm uppercase tracking-[0.2em] text-white/72">{message}</p>
+        <p className="text-sm uppercase tracking-[0.2em] text-white/72">{resolvedMessage}</p>
         <div className="mt-5 h-1 w-full overflow-hidden rounded-full bg-white/8">
           <motion.div
             animate={{ x: ['-25%', '120%'] }}

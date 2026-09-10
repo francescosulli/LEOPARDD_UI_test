@@ -411,8 +411,8 @@ export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalo
       objects: cachedObjects,
       status: hasPublicTleCache ? 'Cache TLE pubblica' : 'Cached demo data',
       message: hasPublicTleCache
-        ? `${cachedObjects.length} TLE reali caricati dalla cache pubblica locale. Modalità offline/cache attiva.`
-        : `${cachedObjects.length} oggetti caricati dal catalogo demo locale.`,
+        ? { key: 'offlineCacheReal', count: cachedObjects.length }
+        : { key: 'offlineCacheDemo', count: cachedObjects.length },
       attemptedLive: false,
     };
   }
@@ -436,10 +436,12 @@ export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalo
       status: 'Live CelesTrak',
       message:
         liveObjects.length < maxObjects
-          ? `${liveObjects.length} oggetti CelesTrak GP + ${
-              supplementedObjects.length - liveObjects.length
-            } supplementari da cache TLE locale.`
-          : `${liveObjects.length} oggetti acquisiti da CelesTrak GP.`,
+          ? {
+              key: 'liveSupplemented',
+              count: liveObjects.length,
+              supplement: supplementedObjects.length - liveObjects.length,
+            }
+          : { key: 'liveFull', count: liveObjects.length },
       attemptedLive: true,
     };
   }
@@ -451,8 +453,8 @@ export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalo
     objects: cachedObjects,
     status: hasPublicTleCache ? 'Cache TLE pubblica' : 'Cached demo data',
     message: hasPublicTleCache
-      ? `${cachedObjects.length} TLE reali caricati dalla cache pubblica locale. ESA DISCOS richiede autenticazione per l'accesso diretto.`
-      : `${cachedObjects.length} oggetti caricati dal catalogo demo locale.`,
+      ? { key: 'cacheRealFallback', count: cachedObjects.length }
+      : { key: 'cacheDemoFallback', count: cachedObjects.length },
     attemptedLive: true,
   };
 }

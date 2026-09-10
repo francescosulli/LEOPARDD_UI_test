@@ -1,7 +1,9 @@
 import { Activity, Database, Navigation, TimerReset } from 'lucide-react';
 import type { CatalogStatus, ConjunctionEvent, DebrisFrame, SatelliteState } from '../types/orbital';
 import { EARTH_RADIUS_KM, magnitude } from '../utils/math';
-import { formatDateTime, formatKm, formatVelocity, riskLabel } from '../utils/formatting';
+import { formatDateTime, formatKm, formatVelocity } from '../utils/formatting';
+import { useLanguage } from '../i18n/LanguageContext';
+import { translateCatalogStatus, translateRiskLabel } from '../i18n/translations';
 
 type TelemetryPanelProps = {
   dataStatus: CatalogStatus | 'Loading';
@@ -20,6 +22,7 @@ export default function TelemetryPanel({
   selectedEvent,
   skipped,
 }: TelemetryPanelProps) {
+  const { language, t } = useLanguage();
   const altitude = userState ? magnitude(userState.positionKm) - EARTH_RADIUS_KM : undefined;
   const speed = userState ? magnitude(userState.velocityKmS) : undefined;
 
@@ -29,43 +32,47 @@ export default function TelemetryPanel({
         <div className="rounded border border-white/10 bg-white/[0.04] p-3">
           <div className="flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-white/50">
             <Database size={13} />
-            Dati orbitali
+            {t('telemetry.orbitalData')}
           </div>
-          <p className="mt-2 text-sm text-white">{dataStatus}</p>
+          <p className="mt-2 text-sm text-white">{translateCatalogStatus(language, dataStatus)}</p>
           <p className="mt-1 truncate text-xs text-white/50">{message}</p>
         </div>
         <div className="rounded border border-white/10 bg-white/[0.04] p-3">
           <div className="flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-white/50">
             <Navigation size={13} />
-            Satellite
+            {t('telemetry.satellite')}
           </div>
-          <p className="mt-2 text-sm text-white">{altitude ? formatKm(altitude, 1) : 'In attesa'}</p>
+          <p className="mt-2 text-sm text-white">
+            {altitude ? formatKm(altitude, 1, language) : t('telemetry.waiting')}
+          </p>
           <p className="mt-1 text-xs text-white/50">
-            {speed ? formatVelocity(speed) : 'Propagazione non avviata'}
+            {speed ? formatVelocity(speed, language) : t('telemetry.propagationNotStarted')}
           </p>
         </div>
         <div className="rounded border border-white/10 bg-white/[0.04] p-3">
           <div className="flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-white/50">
             <TimerReset size={13} />
-            Tempo simulato
+            {t('telemetry.simulatedTime')}
           </div>
           <p className="mt-2 text-sm text-white">
-            {currentFrame ? formatDateTime(currentFrame.timestamp) : 'n.d.'}
+            {currentFrame ? formatDateTime(currentFrame.timestamp, language) : t('telemetry.na')}
           </p>
-          <p className="mt-1 text-xs text-white/50">Scarti propagazione: {skipped}</p>
+          <p className="mt-1 text-xs text-white/50">
+            {t('telemetry.skippedPropagation')}: {skipped}
+          </p>
         </div>
         <div className="rounded border border-white/10 bg-white/[0.04] p-3">
           <div className="flex items-center gap-2 text-[0.68rem] uppercase tracking-[0.16em] text-white/50">
             <Activity size={13} />
-            Oggetto selezionato
+            {t('telemetry.selectedObject')}
           </div>
           <p className="mt-2 truncate text-sm text-white">
-            {selectedEvent ? selectedEvent.debrisName : 'Nessuna congiunzione'}
+            {selectedEvent ? selectedEvent.debrisName : t('telemetry.noConjunction')}
           </p>
           <p className="mt-1 text-xs text-white/50">
             {selectedEvent
-              ? `${riskLabel(selectedEvent.riskLevel)} · ${formatKm(selectedEvent.minDistanceKm, 2)}`
-              : 'Seleziona un evento nella sidebar'}
+              ? `${translateRiskLabel(language, selectedEvent.riskLevel)} · ${formatKm(selectedEvent.minDistanceKm, 2, language)}`
+              : t('telemetry.selectEventSidebar')}
           </p>
         </div>
       </div>

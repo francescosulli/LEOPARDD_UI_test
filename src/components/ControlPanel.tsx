@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { PropagationSettings, SatelliteInput } from '../types/orbital';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export const SATELLITE_PRESETS: Record<string, SatelliteInput> = {
   iss: {
@@ -136,6 +137,7 @@ export default function ControlPanel({
   onReset,
   onScenario,
 }: ControlPanelProps) {
+  const { t } = useLanguage();
   const isISS = Boolean(input.name && /iss|zarya|station/i.test(input.name));
   const [activeTab, setActiveTab] = useState<'iss' | 'kepler' | 'tle'>(
     isISS ? 'iss' : input.mode === 'tle' ? 'tle' : 'kepler',
@@ -158,12 +160,12 @@ export default function ControlPanel({
         <div className="mb-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">
             <Satellite size={15} className="text-astro-orange" />
-            Configurazione Missione
+            {t('controlPanel.missionConfig')}
           </div>
           {isISS ? (
             <span className="inline-flex items-center gap-1 rounded border border-astro-orange/40 bg-astro-orange/15 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-astro-cream">
               <Rocket size={11} className="text-astro-orange" />
-              Scenario ISS Attivo
+              {t('controlPanel.issScenarioActive')}
             </span>
           ) : null}
         </div>
@@ -183,7 +185,7 @@ export default function ControlPanel({
             }`}
           >
             <Rocket size={13} />
-            Scenario ISS
+            {t('controlPanel.tabIss')}
           </button>
           <button
             type="button"
@@ -195,7 +197,7 @@ export default function ControlPanel({
             }`}
           >
             <Compass size={13} />
-            Keplero
+            {t('controlPanel.tabKepler')}
           </button>
           <button
             type="button"
@@ -207,7 +209,7 @@ export default function ControlPanel({
             }`}
           >
             <FileCode2 size={13} />
-            Editor TLE
+            {t('controlPanel.tabTle')}
           </button>
         </div>
       </div>
@@ -223,7 +225,7 @@ export default function ControlPanel({
                 <div>
                   <div className="inline-flex items-center gap-1 text-[0.65rem] font-bold uppercase tracking-wider text-astro-orange">
                     <Rocket size={11} />
-                    Stazione Spaziale Internazionale
+                    {t('controlPanel.issStationLabel')}
                   </div>
                   <h3 className="mt-0.5 text-base font-bold text-white">ISS (ZARYA)</h3>
                   <p className="mt-0.5 text-[0.68rem] text-white/60">
@@ -231,7 +233,7 @@ export default function ControlPanel({
                   </p>
                 </div>
                 <div className="rounded border border-white/10 bg-black/40 px-2 py-1 text-right">
-                  <span className="block text-[0.6rem] uppercase tracking-wider text-white/50">Massa</span>
+                  <span className="block text-[0.6rem] uppercase tracking-wider text-white/50">{t('controlPanel.massLabel')}</span>
                   <span className="font-mono text-xs font-semibold text-white">~450 t</span>
                 </div>
               </div>
@@ -239,15 +241,15 @@ export default function ControlPanel({
               {/* ISS Telemetry Grid */}
               <div className="mt-3 grid grid-cols-3 gap-1.5 text-center">
                 <div className="rounded border border-white/10 bg-white/[0.04] p-1.5">
-                  <span className="block text-[0.6rem] uppercase text-white/45">Quota</span>
+                  <span className="block text-[0.6rem] uppercase text-white/45">{t('controlPanel.altitudeShort')}</span>
                   <span className="font-mono text-xs font-semibold text-astro-cream">418 km</span>
                 </div>
                 <div className="rounded border border-white/10 bg-white/[0.04] p-1.5">
-                  <span className="block text-[0.6rem] uppercase text-white/45">Inclinaz.</span>
+                  <span className="block text-[0.6rem] uppercase text-white/45">{t('controlPanel.inclinationShort')}</span>
                   <span className="font-mono text-xs font-semibold text-astro-cream">51.64°</span>
                 </div>
                 <div className="rounded border border-white/10 bg-white/[0.04] p-1.5">
-                  <span className="block text-[0.6rem] uppercase text-white/45">Velocità</span>
+                  <span className="block text-[0.6rem] uppercase text-white/45">{t('controlPanel.velocityShort')}</span>
                   <span className="font-mono text-xs font-semibold text-astro-cream">7.66 km/s</span>
                 </div>
               </div>
@@ -256,7 +258,8 @@ export default function ControlPanel({
               <div className="mt-2.5 flex items-start gap-2 rounded border border-white/10 bg-black/30 p-2 text-[0.66rem] leading-relaxed text-white/70">
                 <ShieldAlert size={14} className="mt-0.5 shrink-0 text-astro-flame" />
                 <span>
-                  <strong className="text-white">Safety Box 4×50×50 km:</strong> se un detrito transita con distanza critica, viene valutata una manovra di evasione <em>DAM (Debris Avoidance Maneuver)</em>.
+                  <strong className="text-white">{t('controlPanel.safetyBoxLabel')}</strong> {t('controlPanel.safetyBoxBody')}{' '}
+                  <em>{t('controlPanel.damLabel')}</em>.
                 </span>
               </div>
             </div>
@@ -273,7 +276,7 @@ export default function ControlPanel({
                 className="flex h-9 items-center justify-center gap-1.5 rounded bg-astro-orange px-2 text-xs font-semibold text-astro-950 shadow-glow transition hover:bg-white disabled:cursor-wait disabled:opacity-60"
               >
                 <Clock3 size={14} />
-                Propaga ISS
+                {t('controlPanel.propagateIss')}
               </button>
               <button
                 type="button"
@@ -285,7 +288,7 @@ export default function ControlPanel({
                 className="flex h-9 items-center justify-center gap-1.5 rounded border border-astro-flame/45 bg-astro-flame/15 px-2 text-xs font-semibold text-astro-cream transition hover:bg-astro-flame/25 disabled:cursor-wait disabled:opacity-60"
               >
                 <Sparkles size={14} />
-                Allerta DAM
+                {t('controlPanel.damAlert')}
               </button>
             </div>
           </div>
@@ -296,7 +299,7 @@ export default function ControlPanel({
           <div className="space-y-3">
             {/* Quick Presets Chips */}
             <div>
-              <span className="mb-1.5 block text-[0.65rem] uppercase tracking-wider text-white/50">Preset Rapidi</span>
+              <span className="mb-1.5 block text-[0.65rem] uppercase tracking-wider text-white/50">{t('controlPanel.quickPresets')}</span>
               <div className="grid grid-cols-3 gap-1 text-[0.68rem]">
                 <button
                   type="button"
@@ -307,7 +310,7 @@ export default function ControlPanel({
                       : 'border-white/10 bg-white/[0.04] text-white/70 hover:bg-white/[0.08]'
                   }`}
                 >
-                  ASTREO Sat
+                  {t('controlPanel.presetAstreo')}
                 </button>
                 <button
                   type="button"
@@ -318,7 +321,7 @@ export default function ControlPanel({
                       : 'border-white/10 bg-white/[0.04] text-white/70 hover:bg-white/[0.08]'
                   }`}
                 >
-                  Hubble
+                  {t('controlPanel.presetHubble')}
                 </button>
                 <button
                   type="button"
@@ -329,7 +332,7 @@ export default function ControlPanel({
                       : 'border-white/10 bg-white/[0.04] text-white/70 hover:bg-white/[0.08]'
                   }`}
                 >
-                  Starlink
+                  {t('controlPanel.presetStarlink')}
                 </button>
               </div>
             </div>
@@ -337,7 +340,7 @@ export default function ControlPanel({
             {/* Keplerian Fields Grid */}
             <div className="grid grid-cols-2 gap-2.5">
               <NumericField
-                label="Altitudine"
+                label={t('controlPanel.altitude')}
                 unit="km"
                 value={input.altitudeKm}
                 min={120}
@@ -346,7 +349,7 @@ export default function ControlPanel({
                 onChange={(value) => setInput((current) => ({ ...current, mode: 'simple', altitudeKm: value }))}
               />
               <NumericField
-                label="Inclinazione"
+                label={t('controlPanel.inclination')}
                 unit="°"
                 value={input.inclinationDeg}
                 min={0}
@@ -355,7 +358,7 @@ export default function ControlPanel({
                 onChange={(value) => setInput((current) => ({ ...current, mode: 'simple', inclinationDeg: value }))}
               />
               <NumericField
-                label="Eccentricità"
+                label={t('controlPanel.eccentricity')}
                 value={input.eccentricity}
                 min={0}
                 max={0.2}
@@ -363,7 +366,7 @@ export default function ControlPanel({
                 onChange={(value) => setInput((current) => ({ ...current, mode: 'simple', eccentricity: value }))}
               />
               <NumericField
-                label="RAAN (Ω)"
+                label={t('controlPanel.raan')}
                 unit="°"
                 value={input.raanDeg}
                 min={0}
@@ -372,7 +375,7 @@ export default function ControlPanel({
                 onChange={(value) => setInput((current) => ({ ...current, mode: 'simple', raanDeg: value }))}
               />
               <NumericField
-                label="Arg. perigeo (ω)"
+                label={t('controlPanel.argPerigee')}
                 unit="°"
                 value={input.argumentOfPerigeeDeg}
                 min={0}
@@ -381,7 +384,7 @@ export default function ControlPanel({
                 onChange={(value) => setInput((current) => ({ ...current, mode: 'simple', argumentOfPerigeeDeg: value }))}
               />
               <NumericField
-                label="Anomalia media (M)"
+                label={t('controlPanel.meanAnomaly')}
                 unit="°"
                 value={input.meanAnomalyDeg}
                 min={0}
@@ -397,7 +400,7 @@ export default function ControlPanel({
         {activeTab === 'tle' && (
           <div className="space-y-2.5">
             <label className="grid gap-1 text-xs text-white/70">
-              <span>Nome Satellite / Payload</span>
+              <span>{t('controlPanel.satelliteName')}</span>
               <input
                 type="text"
                 value={input.tleName || input.name}
@@ -415,14 +418,14 @@ export default function ControlPanel({
 
             <label className="grid gap-1 text-xs text-white/70">
               <span className="flex justify-between">
-                <span>Riga TLE 1</span>
+                <span>{t('controlPanel.tleLine1')}</span>
                 {input.tleLine1.startsWith('1 ') ? (
                   <span className="flex items-center gap-1 text-[0.65rem] text-emerald-400">
-                    <CheckCircle2 size={11} /> Formato OK
+                    <CheckCircle2 size={11} /> {t('controlPanel.formatOk')}
                   </span>
                 ) : (
                   <span className="flex items-center gap-1 text-[0.65rem] text-red-400">
-                    <AlertCircle size={11} /> Deve iniziare con "1 "
+                    <AlertCircle size={11} /> {t('controlPanel.mustStartWith1')}
                   </span>
                 )}
               </span>
@@ -438,14 +441,14 @@ export default function ControlPanel({
 
             <label className="grid gap-1 text-xs text-white/70">
               <span className="flex justify-between">
-                <span>Riga TLE 2</span>
+                <span>{t('controlPanel.tleLine2')}</span>
                 {input.tleLine2.startsWith('2 ') ? (
                   <span className="flex items-center gap-1 text-[0.65rem] text-emerald-400">
-                    <CheckCircle2 size={11} /> Formato OK
+                    <CheckCircle2 size={11} /> {t('controlPanel.formatOk')}
                   </span>
                 ) : (
                   <span className="flex items-center gap-1 text-[0.65rem] text-red-400">
-                    <AlertCircle size={11} /> Deve iniziare con "2 "
+                    <AlertCircle size={11} /> {t('controlPanel.mustStartWith2')}
                   </span>
                 )}
               </span>
@@ -461,7 +464,7 @@ export default function ControlPanel({
 
             <div className="flex items-center gap-1.5 text-[0.65rem] text-white/50">
               <Info size={12} className="text-astro-orange" />
-              <span>Propagazione SGP4 automatica compatibile con NORAD/CelesTrak.</span>
+              <span>{t('controlPanel.sgp4Note')}</span>
             </div>
           </div>
         )}
@@ -475,11 +478,11 @@ export default function ControlPanel({
         {/* Global Propagation Settings */}
         <div className="border-t border-white/10 pt-3">
           <div className="mb-2 text-[0.68rem] font-semibold uppercase tracking-wider text-white/60">
-            Parametri Simulazione
+            {t('controlPanel.simulationParams')}
           </div>
           <div className="grid grid-cols-2 gap-2">
             <label className="grid gap-1 text-xs text-white/64">
-              <span>Orizzonte</span>
+              <span>{t('controlPanel.horizonShort')}</span>
               <select
                 value={settings.horizonHours}
                 onChange={(event) =>
@@ -487,16 +490,16 @@ export default function ControlPanel({
                 }
                 className="h-8 rounded border border-white/10 bg-astro-900 px-2 text-xs text-white outline-none transition focus:border-astro-orange/55"
               >
-                <option value={1}>1 ora</option>
-                <option value={6}>6 ore</option>
-                <option value={12}>12 ore</option>
-                <option value={24}>24 ore</option>
-                <option value={72}>3 giorni</option>
-                <option value={168}>7 giorni</option>
+                <option value={1}>{t('controlPanel.hour1')}</option>
+                <option value={6}>{t('controlPanel.hours6')}</option>
+                <option value={12}>{t('controlPanel.hours12')}</option>
+                <option value={24}>{t('controlPanel.hours24')}</option>
+                <option value={72}>{t('controlPanel.days3')}</option>
+                <option value={168}>{t('controlPanel.days7')}</option>
               </select>
             </label>
             <label className="grid gap-1 text-xs text-white/64">
-              <span>Passo</span>
+              <span>{t('controlPanel.stepShort')}</span>
               <select
                 value={settings.stepMinutes}
                 onChange={(event) =>
@@ -504,16 +507,16 @@ export default function ControlPanel({
                 }
                 className="h-8 rounded border border-white/10 bg-astro-900 px-2 text-xs text-white outline-none transition focus:border-astro-orange/55"
               >
-                <option value={1}>1 min</option>
-                <option value={5}>5 min</option>
-                <option value={10}>10 min</option>
-                <option value={30}>30 min</option>
+                <option value={1}>{t('controlPanel.min1')}</option>
+                <option value={5}>{t('controlPanel.min5')}</option>
+                <option value={10}>{t('controlPanel.min10')}</option>
+                <option value={30}>{t('controlPanel.min30')}</option>
               </select>
             </label>
           </div>
 
           <label className="mt-2 grid gap-1 text-xs text-white/64">
-            <span>Oggetti catalogo attivi</span>
+            <span>{t('controlPanel.catalogObjects')}</span>
             <select
               value={settings.maxDebris}
               onChange={(event) =>
@@ -521,9 +524,9 @@ export default function ControlPanel({
               }
               className="h-8 rounded border border-white/10 bg-astro-900 px-2 text-xs text-white outline-none transition focus:border-astro-orange/55"
             >
-              <option value={300}>300 oggetti</option>
-              <option value={600}>600 oggetti</option>
-              <option value={1000}>1000 oggetti</option>
+              <option value={300}>{t('controlPanel.debris300')}</option>
+              <option value={600}>{t('controlPanel.debris600')}</option>
+              <option value={1000}>{t('controlPanel.debris1000')}</option>
             </select>
           </label>
         </div>
@@ -532,7 +535,7 @@ export default function ControlPanel({
         <div className="flex items-center gap-2.5 rounded border border-white/10 bg-white/[0.04] p-2.5">
           <button
             type="button"
-            aria-label={isPlaying ? 'Pausa simulazione' : 'Riproduci simulazione'}
+            aria-label={isPlaying ? t('controlPanel.pauseSimulation') : t('controlPanel.playSimulation')}
             onClick={() => setIsPlaying(!isPlaying)}
             className="grid h-8 w-8 shrink-0 place-items-center rounded border border-white/10 bg-white/[0.06] text-white transition hover:bg-white/[0.12]"
           >
@@ -542,7 +545,7 @@ export default function ControlPanel({
             <span className="flex items-center justify-between text-[0.68rem]">
               <span className="flex items-center gap-1.5">
                 <Gauge size={12} />
-                Velocità
+                {t('controlPanel.speedLabel')}
               </span>
               <span className="font-mono text-white/80">{speed}x</span>
             </span>
@@ -567,7 +570,7 @@ export default function ControlPanel({
           className="flex h-9 items-center justify-center gap-1.5 rounded bg-astro-orange px-2 text-xs font-semibold text-astro-950 shadow-glow transition hover:bg-white disabled:cursor-wait disabled:opacity-60"
         >
           <Clock3 size={14} />
-          {isPropagating ? 'Calcolo...' : 'Propaga orbita'}
+          {isPropagating ? t('controlPanel.calculating') : t('controlPanel.propagateOrbit')}
         </button>
 
         <button
@@ -581,12 +584,12 @@ export default function ControlPanel({
           }`}
         >
           <Sparkles size={14} />
-          {isISS ? 'Allerta ISS' : 'Scenario Demo'}
+          {isISS ? t('controlPanel.scenarioIss') : t('controlPanel.scenarioDefault')}
         </button>
 
         <button
           type="button"
-          aria-label="Reset"
+          aria-label={t('controlPanel.resetAria')}
           onClick={onReset}
           className="grid h-9 place-items-center rounded border border-white/10 bg-white/[0.06] text-white transition hover:bg-white/[0.1]"
         >

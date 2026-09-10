@@ -17,6 +17,7 @@ import type {
   SatelliteInput,
   SatelliteState,
 } from '../types/orbital';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const DEFAULT_INPUT: SatelliteInput = {
   mode: 'simple',
@@ -61,6 +62,7 @@ function useSimulationClock(frameCount: number, isPlaying: boolean, speed: numbe
 }
 
 export default function DemoPage() {
+  const { t } = useLanguage();
   const [input, setInput] = useState<SatelliteInput>(DEFAULT_INPUT);
   const [settings, setSettings] = useState<PropagationSettings>(DEFAULT_SETTINGS);
   const [catalog, setCatalog] = useState<DebrisObject[]>([]);
@@ -70,7 +72,6 @@ export default function DemoPage() {
   const [events, setEvents] = useState<ConjunctionEvent[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [dataStatus, setDataStatus] = useState<CatalogStatus | 'Loading'>('Loading');
-  const [catalogMessage, setCatalogMessage] = useState('Acquiring orbital catalog...');
   const [skippedDebris, setSkippedDebris] = useState(0);
   const [isLoadingCatalog, setIsLoadingCatalog] = useState(true);
   const [isPropagating, setIsPropagating] = useState(false);
@@ -136,7 +137,6 @@ export default function DemoPage() {
 
     async function loadCatalog() {
       setIsLoadingCatalog(true);
-      setCatalogMessage('Acquiring orbital catalog...');
 
       try {
         const result = await fetchDebrisCatalog(1000);
@@ -147,17 +147,14 @@ export default function DemoPage() {
 
         setCatalog(result.objects);
         setDataStatus(result.status);
-        setCatalogMessage(result.message);
         initializeCurrentView(result.objects);
       } catch (error) {
         if (cancelled) {
           return;
         }
 
+        console.error(error);
         setDataStatus('Cached demo data');
-        setCatalogMessage(
-          error instanceof Error ? error.message : 'Errore nel caricamento dei dati orbitali.',
-        );
       } finally {
         if (!cancelled) {
           setIsLoadingCatalog(false);
@@ -200,18 +197,15 @@ export default function DemoPage() {
           setIsPlaying(true);
           setScenarioActive(withScenario);
         } catch (error) {
-          setInputError(
-            error instanceof Error
-              ? error.message
-              : 'Errore durante propagazione o validazione del satellite.',
-          );
+          console.error(error);
+          setInputError(t('errors.propagation'));
           setIsPlaying(false);
         } finally {
           setIsPropagating(false);
         }
       }, 40);
     },
-    [catalog, input, recomputeEvents, scenarioActive, settings.horizonHours, settings.maxDebris, settings.stepMinutes],
+    [catalog, input, recomputeEvents, scenarioActive, settings.horizonHours, settings.maxDebris, settings.stepMinutes, t],
   );
 
   useEffect(() => {
@@ -281,7 +275,7 @@ export default function DemoPage() {
       </div>
       <LoadingOverlay
         visible={isLoadingCatalog || isPropagating}
-        message={isLoadingCatalog ? 'Acquiring orbital catalog...' : 'Propagating orbital states...'}
+        message={isLoadingCatalog ? t('loading.acquiringCatalog') : t('loading.propagatingStates')}
       />
     </main>
   );

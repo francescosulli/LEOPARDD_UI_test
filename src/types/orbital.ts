@@ -35,10 +35,24 @@ export interface CachedDebrisTemplate {
   bstar?: string;
 }
 
+export type CatalogMessageKey =
+  | 'offlineCacheReal'
+  | 'offlineCacheDemo'
+  | 'liveSupplemented'
+  | 'liveFull'
+  | 'cacheRealFallback'
+  | 'cacheDemoFallback';
+
+export interface CatalogMessage {
+  key: CatalogMessageKey;
+  count: number;
+  supplement?: number;
+}
+
 export interface DebrisCatalogResult {
   objects: DebrisObject[];
   status: CatalogStatus;
-  message: string;
+  message: CatalogMessage;
   attemptedLive: boolean;
 }
 
