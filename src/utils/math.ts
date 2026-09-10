@@ -55,6 +55,10 @@ export function cross(a: Vec3, b: Vec3): Vec3 {
   };
 }
 
+export function dot(a: Vec3, b: Vec3): number {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
 export function isFiniteVec3(vector: Vec3) {
   return Number.isFinite(vector.x) && Number.isFinite(vector.y) && Number.isFinite(vector.z);
 }
