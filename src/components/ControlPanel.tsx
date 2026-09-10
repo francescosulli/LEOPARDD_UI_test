@@ -1,12 +1,8 @@
 import { useState } from 'react';
 import {
-  AlertCircle,
-  CheckCircle2,
   Clock3,
   Compass,
-  FileCode2,
   Gauge,
-  Info,
   Pause,
   Play,
   Rocket,
@@ -139,9 +135,7 @@ export default function ControlPanel({
 }: ControlPanelProps) {
   const { t } = useLanguage();
   const isISS = Boolean(input.name && /iss|zarya|station/i.test(input.name));
-  const [activeTab, setActiveTab] = useState<'iss' | 'kepler' | 'tle'>(
-    isISS ? 'iss' : input.mode === 'tle' ? 'tle' : 'kepler',
-  );
+  const [activeTab, setActiveTab] = useState<'iss' | 'kepler'>(isISS ? 'iss' : 'kepler');
 
   const handleSelectPreset = (key: keyof typeof SATELLITE_PRESETS) => {
     const preset = SATELLITE_PRESETS[key];
@@ -198,18 +192,6 @@ export default function ControlPanel({
           >
             <Compass size={13} />
             {t('controlPanel.tabKepler')}
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('tle')}
-            className={`flex items-center gap-1.5 rounded px-2.5 py-1.5 font-medium transition ${
-              activeTab === 'tle'
-                ? 'bg-astro-orange font-semibold text-astro-950 shadow-sm'
-                : 'bg-white/[0.04] text-white/70 hover:bg-white/[0.08] hover:text-white'
-            }`}
-          >
-            <FileCode2 size={13} />
-            {t('controlPanel.tabTle')}
           </button>
         </div>
       </div>
@@ -392,79 +374,6 @@ export default function ControlPanel({
                 step={1}
                 onChange={(value) => setInput((current) => ({ ...current, mode: 'simple', meanAnomalyDeg: value }))}
               />
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: TLE EDITOR */}
-        {activeTab === 'tle' && (
-          <div className="space-y-2.5">
-            <label className="grid gap-1 text-xs text-white/70">
-              <span>{t('controlPanel.satelliteName')}</span>
-              <input
-                type="text"
-                value={input.tleName || input.name}
-                onChange={(event) =>
-                  setInput((current) => ({
-                    ...current,
-                    mode: 'tle',
-                    name: event.target.value,
-                    tleName: event.target.value,
-                  }))
-                }
-                className="h-9 rounded border border-white/10 bg-white/[0.06] px-2.5 text-xs text-white outline-none transition focus:border-astro-orange/55"
-              />
-            </label>
-
-            <label className="grid gap-1 text-xs text-white/70">
-              <span className="flex justify-between">
-                <span>{t('controlPanel.tleLine1')}</span>
-                {input.tleLine1.startsWith('1 ') ? (
-                  <span className="flex items-center gap-1 text-[0.65rem] text-emerald-400">
-                    <CheckCircle2 size={11} /> {t('controlPanel.formatOk')}
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-[0.65rem] text-red-400">
-                    <AlertCircle size={11} /> {t('controlPanel.mustStartWith1')}
-                  </span>
-                )}
-              </span>
-              <input
-                type="text"
-                value={input.tleLine1}
-                onChange={(event) =>
-                  setInput((current) => ({ ...current, mode: 'tle', tleLine1: event.target.value }))
-                }
-                className="h-8 rounded border border-white/10 bg-black/40 px-2 font-mono text-[0.68rem] text-white outline-none transition focus:border-astro-orange/55"
-              />
-            </label>
-
-            <label className="grid gap-1 text-xs text-white/70">
-              <span className="flex justify-between">
-                <span>{t('controlPanel.tleLine2')}</span>
-                {input.tleLine2.startsWith('2 ') ? (
-                  <span className="flex items-center gap-1 text-[0.65rem] text-emerald-400">
-                    <CheckCircle2 size={11} /> {t('controlPanel.formatOk')}
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-[0.65rem] text-red-400">
-                    <AlertCircle size={11} /> {t('controlPanel.mustStartWith2')}
-                  </span>
-                )}
-              </span>
-              <input
-                type="text"
-                value={input.tleLine2}
-                onChange={(event) =>
-                  setInput((current) => ({ ...current, mode: 'tle', tleLine2: event.target.value }))
-                }
-                className="h-8 rounded border border-white/10 bg-black/40 px-2 font-mono text-[0.68rem] text-white outline-none transition focus:border-astro-orange/55"
-              />
-            </label>
-
-            <div className="flex items-center gap-1.5 text-[0.65rem] text-white/50">
-              <Info size={12} className="text-astro-orange" />
-              <span>{t('controlPanel.sgp4Note')}</span>
             </div>
           </div>
         )}
