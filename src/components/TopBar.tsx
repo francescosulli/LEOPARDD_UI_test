@@ -1,24 +1,20 @@
-import { Activity, ArrowLeft, Database, RadioTower } from 'lucide-react';
+import { Activity, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AstreoLogo from './AstreoLogo';
 import LanguageToggle from './LanguageToggle';
 import type { CatalogStatus } from '../types/orbital';
 import { formatDateTime } from '../utils/formatting';
 import { useLanguage } from '../i18n/LanguageContext';
-import { translateCatalogStatus } from '../i18n/translations';
 
 type TopBarProps = {
-  dataStatus: CatalogStatus | 'Loading';
+  dataStatus?: CatalogStatus | 'Loading';
   currentTime?: number;
-  debrisCount: number;
+  debrisCount?: number;
   isPlaying: boolean;
 };
 
-export default function TopBar({ dataStatus, currentTime, debrisCount, isPlaying }: TopBarProps) {
+export default function TopBar({ currentTime, isPlaying }: TopBarProps) {
   const { language, t } = useLanguage();
-  const isLive = dataStatus === 'Live CelesTrak';
-  const isPublicCache = dataStatus === 'Cache TLE pubblica';
-  const sourceLabel = isLive ? t('topBar.sourceLive') : isPublicCache ? t('topBar.sourceCache') : t('topBar.sourceFallback');
 
   return (
     <header className="pointer-events-auto mission-panel absolute left-4 right-4 top-4 z-20 flex min-h-16 items-center justify-between gap-4 rounded px-4 py-3">
@@ -39,17 +35,6 @@ export default function TopBar({ dataStatus, currentTime, debrisCount, isPlaying
 
       <div className="flex shrink-0 items-center gap-2 lg:gap-3">
         <div className="hidden items-center gap-3 lg:flex">
-          <div className="flex items-center gap-2 rounded border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80">
-            <Database size={14} />
-            <span>{translateCatalogStatus(language, dataStatus)}</span>
-            <span className={isLive || isPublicCache ? 'text-astro-orange' : 'text-astro-flame'}>
-              {sourceLabel}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 rounded border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80">
-            <RadioTower size={14} />
-            <span>{debrisCount} {t('topBar.objectsSuffix')}</span>
-          </div>
           <div className="flex items-center gap-2 rounded border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80">
             <Activity size={14} className={isPlaying ? 'text-astro-orange' : 'text-white/52'} />
             <span>{currentTime ? formatDateTime(currentTime, language) : t('topBar.simulationReady')}</span>

@@ -17,14 +17,16 @@ type GlobeSceneProps = {
   userState?: SatelliteState;
   userTrail: SatelliteState[];
   selectedEvent?: ConjunctionEvent | null;
+  isLoading?: boolean;
 };
 
 function SceneLights() {
   return (
     <>
-      <ambientLight intensity={0.32} />
-      <directionalLight position={[5, 3, 6]} intensity={1.65} color="#fff7ed" />
-      <pointLight position={[-5, -4, -3]} intensity={0.55} color="#ef7d17" />
+      <ambientLight intensity={0.65} />
+      <directionalLight position={[6, 4, 7]} intensity={1.8} color="#fff7ed" />
+      <directionalLight position={[-6, -3, -6]} intensity={0.7} color="#93c5fd" />
+      <pointLight position={[-5, -4, -3]} intensity={0.7} color="#ef7d17" />
     </>
   );
 }
@@ -124,6 +126,7 @@ export default function GlobeScene({
   userState,
   userTrail,
   selectedEvent,
+  isLoading,
 }: GlobeSceneProps) {
   const { t } = useLanguage();
   const selectedDebrisTrail = useMemo(() => {

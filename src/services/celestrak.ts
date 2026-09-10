@@ -402,12 +402,18 @@ function shouldUseLocalCacheOnly() {
   return params.get('source') === 'cache' || params.has('offline') || navigator.onLine === false;
 }
 
+let memoryCachedCatalogResult: DebrisCatalogResult | null = null;
+
 export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalogResult> {
+  if (memoryCachedCatalogResult && memoryCachedCatalogResult.objects.length >= Math.min(maxObjects, 300)) {
+    return memoryCachedCatalogResult;
+  }
+
   if (shouldUseLocalCacheOnly()) {
     const cachedObjects = await fetchCachedCatalog(maxObjects);
     const hasPublicTleCache = cachedObjects.some((object) => object.source === CACHED_PUBLIC_TLE_SOURCE);
 
-    return {
+    const result: DebrisCatalogResult = {
       objects: cachedObjects,
       status: hasPublicTleCache ? 'Cache TLE pubblica' : 'Cached demo data',
       message: hasPublicTleCache
@@ -415,6 +421,8 @@ export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalo
         : { key: 'offlineCacheDemo', count: cachedObjects.length },
       attemptedLive: false,
     };
+    memoryCachedCatalogResult = result;
+    return result;
   }
 
   const liveObjects = await fetchLiveCatalog(maxObjects);
@@ -431,7 +439,7 @@ export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalo
           ]
         : liveObjects;
 
-    return {
+    const result: DebrisCatalogResult = {
       objects: supplementedObjects.slice(0, maxObjects),
       status: 'Live CelesTrak',
       message:
@@ -444,12 +452,14 @@ export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalo
           : { key: 'liveFull', count: liveObjects.length },
       attemptedLive: true,
     };
+    memoryCachedCatalogResult = result;
+    return result;
   }
 
   const cachedObjects = await fetchCachedCatalog(maxObjects);
   const hasPublicTleCache = cachedObjects.some((object) => object.source === CACHED_PUBLIC_TLE_SOURCE);
 
-  return {
+  const result: DebrisCatalogResult = {
     objects: cachedObjects,
     status: hasPublicTleCache ? 'Cache TLE pubblica' : 'Cached demo data',
     message: hasPublicTleCache
@@ -457,4 +467,6 @@ export async function fetchDebrisCatalog(maxObjects = 600): Promise<DebrisCatalo
       : { key: 'cacheDemoFallback', count: cachedObjects.length },
     attemptedLive: true,
   };
+  memoryCachedCatalogResult = result;
+  return result;
 }

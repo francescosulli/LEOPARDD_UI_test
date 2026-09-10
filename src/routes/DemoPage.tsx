@@ -108,6 +108,34 @@ export default function DemoPage() {
     [],
   );
 
+  // Immediate reactive satellite state update when input changes
+  useEffect(() => {
+    try {
+      const now = new Date();
+      let user: SatelliteState;
+      try {
+        const userStatesNow = propagateUserSatellite(input, [now]);
+        user = userStatesNow[0];
+      } catch {
+        user = propagateSyntheticState(input, now, now, input.name);
+      }
+
+      setUserStates((current) => {
+        if (current.length <= 1) {
+          return [user];
+        }
+        try {
+          const timeline = createTimeline(now, settings.horizonHours, settings.stepMinutes);
+          return propagateUserSatellite(input, timeline);
+        } catch {
+          return [user];
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }, [input, settings.horizonHours, settings.stepMinutes]);
+
   const initializeCurrentView = useCallback(
     (objects: DebrisObject[], maxDebris = DEFAULT_SETTINGS.maxDebris, satelliteInput = input) => {
       const now = new Date();
@@ -237,6 +265,7 @@ export default function DemoPage() {
         userState={currentUserState}
         userTrail={userTrail}
         selectedEvent={selectedEvent}
+        isLoading={isLoadingCatalog || isPropagating}
       />
       <TopBar
         dataStatus={dataStatus}
@@ -274,8 +303,8 @@ export default function DemoPage() {
         </div>
       </div>
       <LoadingOverlay
-        visible={isLoadingCatalog || isPropagating}
-        message={isLoadingCatalog ? t('loading.acquiringCatalog') : t('loading.propagatingStates')}
+        visible={isLoadingCatalog}
+        message={t('loading.acquiringCatalog')}
       />
     </main>
   );

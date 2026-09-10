@@ -17,7 +17,7 @@ export default function LoadingOverlay({ visible, message }: LoadingOverlayProps
   const resolvedMessage = message ?? t('loading.acquiringCatalog');
 
   return (
-    <div className="absolute inset-0 z-50 grid place-items-center bg-astro-950/86 backdrop-blur-xl">
+    <div className="absolute inset-0 z-[100] grid place-items-center bg-astro-950/86 backdrop-blur-xl">
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}

@@ -28,7 +28,7 @@ export default function RiskPanel({
   const { language, t } = useLanguage();
 
   return (
-    <section className="mission-panel pointer-events-auto flex h-full min-h-0 flex-col overflow-hidden rounded">
+    <section className="mission-panel pointer-events-auto flex h-full min-h-0 flex-col overflow-hidden rounded-lg">
       {/* Top Header */}
       <div className="flex items-center justify-between border-b border-white/10 bg-black/20 px-3.5 py-2.5">
         <div className="flex items-center gap-2">
@@ -38,11 +38,11 @@ export default function RiskPanel({
           </span>
         </div>
         {events.length ? (
-          <span className="rounded border border-astro-orange/30 bg-astro-orange/15 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-astro-cream">
+          <span className="rounded-md border border-astro-orange/30 bg-astro-orange/15 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-astro-cream">
             {events.length} {events.length === 1 ? t('riskPanel.eventSingular') : t('riskPanel.eventPlural')}
           </span>
         ) : (
-          <span className="rounded border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] text-white/50">
+          <span className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] text-white/50">
             {t('riskPanel.top10')}
           </span>
         )}
@@ -51,14 +51,14 @@ export default function RiskPanel({
       {/* Content Area with Vertical Scroll */}
       <div className="thin-scrollbar min-h-0 flex-1 overflow-y-auto p-3">
         {isPropagating ? (
-          <div className="grid h-32 place-items-center rounded border border-white/10 bg-white/[0.03] text-xs uppercase tracking-[0.18em] text-white/60">
+          <div className="grid h-32 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-xs uppercase tracking-[0.18em] text-white/60">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 animate-ping rounded-full bg-astro-orange" />
               {t('riskPanel.calculating')}
             </div>
           </div>
         ) : events.length ? (
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {events.map((event, index) => {
               const selected = event.id === selectedEventId;
               const isCritical = event.riskLevel === 'Critical';
@@ -69,7 +69,7 @@ export default function RiskPanel({
                   key={event.id}
                   type="button"
                   onClick={() => onSelect(event)}
-                  className={`w-full rounded border p-2.5 text-left transition hover:translate-y-[-1px] ${
+                  className={`w-full rounded-md border p-2.5 text-left transition active:scale-[0.99] hover:translate-y-[-1px] ${
                     selected
                       ? 'border-astro-orange bg-astro-orange/18 shadow-glow ring-1 ring-astro-orange/60'
                       : riskTone(event.riskLevel)
@@ -90,7 +90,7 @@ export default function RiskPanel({
                       </p>
                     </div>
                     <span
-                      className={`shrink-0 rounded px-1.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider ${
+                      className={`shrink-0 rounded-md px-1.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider ${
                         isCritical
                           ? 'bg-red-500/25 text-red-200 ring-1 ring-red-500/50'
                           : isHigh
@@ -105,7 +105,7 @@ export default function RiskPanel({
                   </div>
 
                   {/* Card Metrics Grid */}
-                  <div className="mt-2 grid grid-cols-4 gap-1 rounded bg-black/25 p-1.5 text-[0.68rem]">
+                  <div className="mt-2 grid grid-cols-4 gap-1 rounded-md bg-black/30 p-1.5 text-[0.68rem]">
                     <div>
                       <span className="block text-[0.58rem] uppercase text-white/45">{t('riskPanel.distanceShort')}</span>
                       <span className="font-mono font-bold text-white">
@@ -136,15 +136,15 @@ export default function RiskPanel({
             })}
           </div>
         ) : (
-          <div className="grid min-h-28 place-items-center rounded border border-white/10 bg-white/[0.02] p-3 text-center">
+          <div className="grid min-h-28 place-items-center rounded-lg border border-white/10 bg-white/[0.02] p-4 text-center">
             <div>
-              <ShieldCheck className="mx-auto mb-1.5 text-emerald-400" size={22} />
+              <ShieldCheck className="mx-auto mb-1.5 text-emerald-400" size={24} />
               <p className="text-xs font-medium text-white">{t('riskPanel.emptyState')}</p>
               {onRunScenario ? (
                 <button
                   type="button"
                   onClick={onRunScenario}
-                  className="mt-2.5 inline-flex items-center gap-1.5 rounded border border-astro-flame/40 bg-astro-flame/15 px-2.5 py-1 text-xs font-semibold text-astro-cream transition hover:bg-astro-flame/25"
+                  className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-md border border-astro-flame/45 bg-astro-flame/15 px-3 text-xs font-semibold text-astro-cream transition hover:bg-astro-flame/25 active:scale-[0.98]"
                 >
                   <Sparkles size={13} />
                   {t('riskPanel.simulateAlert')}
