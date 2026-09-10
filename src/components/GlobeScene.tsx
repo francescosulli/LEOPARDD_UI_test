@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Line, OrbitControls, Stars } from '@react-three/drei';
-import { Suspense, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { Color, Vector3 } from 'three';
 import DebrisCloud from './DebrisCloud';
 import Earth from './Earth';
@@ -28,37 +28,72 @@ function SceneLights() {
   );
 }
 
+const ORIGIN = new Vector3(0, 0, 0);
+
 function FocusController({ selectedEvent }: { selectedEvent?: ConjunctionEvent | null }) {
   const { camera, controls } = useThree() as never as {
     camera: { position: Vector3; lookAt: (target: Vector3) => void };
-    controls?: { target: Vector3; update: () => void };
+    controls?: { target: Vector3; update: () => void; addEventListener: (event: string, fn: () => void) => void; removeEventListener: (event: string, fn: () => void) => void };
   };
-  const target = useMemo(() => {
+
+  const isTransitioningRef = useRef(false);
+  const targetCamPosRef = useRef<Vector3 | null>(null);
+  const lastEventIdRef = useRef<string | null>(null);
+
+  // When selected event changes, compute desired camera position looking at Earth center
+  useEffect(() => {
     if (!selectedEvent) {
-      return null;
-    }
-
-    const midpoint: Vec3 = {
-      x: (selectedEvent.userPositionKm.x + selectedEvent.debrisPositionKm.x) / 2,
-      y: (selectedEvent.userPositionKm.y + selectedEvent.debrisPositionKm.y) / 2,
-      z: (selectedEvent.userPositionKm.z + selectedEvent.debrisPositionKm.z) / 2,
-    };
-    return new Vector3(...kmToSceneTuple(midpoint));
-  }, [selectedEvent]);
-
-  useFrame((_, delta) => {
-    if (!target) {
+      targetCamPosRef.current = null;
+      isTransitioningRef.current = false;
       return;
     }
 
-    const desired = target.clone().normalize().multiplyScalar(7.2).add(target);
-    camera.position.lerp(desired, Math.min(1, delta * 1.8));
+    if (selectedEvent.id !== lastEventIdRef.current) {
+      lastEventIdRef.current = selectedEvent.id;
+      const midpoint: Vec3 = {
+        x: (selectedEvent.userPositionKm.x + selectedEvent.debrisPositionKm.x) / 2,
+        y: (selectedEvent.userPositionKm.y + selectedEvent.debrisPositionKm.y) / 2,
+        z: (selectedEvent.userPositionKm.z + selectedEvent.debrisPositionKm.z) / 2,
+      };
+      const eventPos = new Vector3(...kmToSceneTuple(midpoint));
+      if (eventPos.lengthSq() > 0.001) {
+        // Keep camera distance around 5.8 - 6.5 units, centered on Earth (0,0,0)
+        const currentDist = Math.max(4.5, Math.min(camera.position.length(), 8.0));
+        targetCamPosRef.current = eventPos.normalize().multiplyScalar(currentDist);
+        isTransitioningRef.current = true;
+      }
+    }
+  }, [selectedEvent, camera.position]);
 
-    if (controls) {
-      controls.target.lerp(target, Math.min(1, delta * 2.6));
+  // If user starts interacting, stop automatic transition
+  useEffect(() => {
+    if (!controls) return;
+    const handleStart = () => {
+      isTransitioningRef.current = false;
+    };
+    controls.addEventListener('start', handleStart);
+    return () => {
+      controls.removeEventListener('start', handleStart);
+    };
+  }, [controls]);
+
+  useFrame((_, delta) => {
+    // Ensure target always stays centered at the planet center (0,0,0)
+    if (controls && controls.target.lengthSq() > 0.0001) {
+      controls.target.set(0, 0, 0);
       controls.update();
-    } else {
-      camera.lookAt(target);
+    }
+
+    if (isTransitioningRef.current && targetCamPosRef.current) {
+      camera.position.lerp(targetCamPosRef.current, Math.min(1, delta * 3.0));
+      camera.lookAt(ORIGIN);
+
+      if (camera.position.distanceTo(targetCamPosRef.current) < 0.05) {
+        isTransitioningRef.current = false;
+      }
+      if (controls) {
+        controls.update();
+      }
     }
   });
 
@@ -127,7 +162,16 @@ export default function GlobeScene({
           <SatelliteMarker state={userState} />
           <RiskConnector selectedEvent={selectedEvent} />
           <FocusController selectedEvent={selectedEvent} />
-          <OrbitControls makeDefault enableDamping dampingFactor={0.08} minDistance={3.2} maxDistance={13} />
+          <OrbitControls
+            makeDefault
+            enableDamping
+            dampingFactor={0.06}
+            minDistance={2.6}
+            maxDistance={14}
+            enablePan={false}
+            rotateSpeed={0.8}
+            target={[0, 0, 0]}
+          />
         </Suspense>
       </Canvas>
       <div className="pointer-events-none absolute inset-0 grid-mask opacity-60" />
