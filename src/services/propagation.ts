@@ -87,6 +87,7 @@ export function propagateUserSatellite(input: SatelliteInput, timeline: Date[]):
       positionKm: propagated.positionKm,
       velocityKmS: propagated.velocityKmS,
       source: 'SGP4 TLE',
+      name: label,
     };
   });
 }

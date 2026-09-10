@@ -65,6 +65,7 @@ export interface SatelliteState {
   positionKm: Vec3;
   velocityKmS: Vec3;
   source: 'SGP4 TLE' | 'synthetic demo orbit';
+  name?: string;
 }
 
 export interface DebrisFrame {

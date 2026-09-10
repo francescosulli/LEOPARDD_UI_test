@@ -99,6 +99,7 @@ export function propagateSyntheticState(
     positionKm: rotateFromPerifocal(positionPerifocal, orbit),
     velocityKmS: rotateFromPerifocal(velocityPerifocal, orbit),
     source: 'synthetic demo orbit',
+    name,
   };
 }
 

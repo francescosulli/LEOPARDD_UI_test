@@ -1,7 +1,7 @@
-import { AlertTriangle, Crosshair, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, Crosshair, ShieldCheck, Sparkles } from 'lucide-react';
 import type { ConjunctionEvent } from '../types/orbital';
 import {
-  formatDateTimeLong,
+  formatDateTime,
   formatKm,
   formatPercent,
   formatVelocity,
@@ -14,6 +14,7 @@ type RiskPanelProps = {
   selectedEventId?: string | null;
   onSelect: (event: ConjunctionEvent) => void;
   isPropagating: boolean;
+  onRunScenario?: () => void;
 };
 
 export default function RiskPanel({
@@ -21,80 +22,110 @@ export default function RiskPanel({
   selectedEventId,
   onSelect,
   isPropagating,
+  onRunScenario,
 }: RiskPanelProps) {
   return (
-    <section className="mission-panel pointer-events-auto flex min-h-0 flex-1 flex-col rounded">
-      <div className="border-b border-white/10 px-4 py-4">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em]">
-            <Crosshair size={16} className="text-astro-flame" />
-            Possibili congiunzioni
-          </div>
-          <span className="rounded border border-white/10 bg-white/[0.05] px-2 py-1 text-[0.65rem] uppercase tracking-[0.15em] text-white/54">
-            Top 10
+    <section className="mission-panel pointer-events-auto flex h-full min-h-0 flex-col overflow-hidden rounded">
+      {/* Top Header */}
+      <div className="flex items-center justify-between border-b border-white/10 bg-black/20 px-3.5 py-2.5">
+        <div className="flex items-center gap-2">
+          <Crosshair size={15} className="text-astro-flame" />
+          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-white">
+            Possibili Congiunzioni & Rischio
           </span>
         </div>
-        <p className="mt-1 text-xs text-white/56">Distanze in ECI coerenti, campionate nel tempo.</p>
+        {events.length ? (
+          <span className="rounded border border-astro-orange/30 bg-astro-orange/15 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-astro-cream">
+            {events.length} {events.length === 1 ? 'Evento' : 'Eventi'}
+          </span>
+        ) : (
+          <span className="rounded border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] text-white/50">
+            Top 10
+          </span>
+        )}
       </div>
 
-      <div className="thin-scrollbar min-h-0 flex-1 overflow-y-auto p-4">
+      {/* Content Area with Vertical Scroll */}
+      <div className="thin-scrollbar min-h-0 flex-1 overflow-y-auto p-3">
         {isPropagating ? (
-          <div className="grid h-36 place-items-center rounded border border-white/10 bg-white/[0.04] text-xs uppercase tracking-[0.18em] text-white/56">
-            Analisi rischio...
+          <div className="grid h-32 place-items-center rounded border border-white/10 bg-white/[0.03] text-xs uppercase tracking-[0.18em] text-white/60">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 animate-ping rounded-full bg-astro-orange" />
+              Calcolo congiunzioni in corso...
+            </div>
           </div>
         ) : events.length ? (
-          <div className="space-y-3">
-            {events.map((event) => {
+          <div className="space-y-2.5">
+            {events.map((event, index) => {
               const selected = event.id === selectedEventId;
+              const isCritical = event.riskLevel === 'Critical';
+              const isHigh = event.riskLevel === 'High';
 
               return (
                 <button
                   key={event.id}
                   type="button"
                   onClick={() => onSelect(event)}
-                  className={`w-full rounded border p-3 text-left transition hover:translate-y-[-1px] hover:border-astro-orange/45 ${
-                    selected ? 'border-astro-orange/60 bg-astro-orange/14' : riskTone(event.riskLevel)
+                  className={`w-full rounded border p-2.5 text-left transition hover:translate-y-[-1px] ${
+                    selected
+                      ? 'border-astro-orange bg-astro-orange/18 shadow-glow ring-1 ring-astro-orange/60'
+                      : riskTone(event.riskLevel)
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-white">{event.debrisName}</p>
-                      <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em] text-white/50">
+                  {/* Card Header */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono text-[0.62rem] font-bold text-white/40">
+                          #{index + 1}
+                        </span>
+                        <p className="truncate text-xs font-bold text-white">{event.debrisName}</p>
+                      </div>
+                      <p className="mt-0.5 text-[0.62rem] font-medium uppercase tracking-[0.12em] text-white/50">
                         NORAD {event.noradId ?? 'n.d.'}
-                        {event.isSynthetic ? ' · sintetico' : ''}
+                        {event.isSynthetic ? ' · DEMO' : ''}
                       </p>
                     </div>
                     <span
-                      className={`rounded px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] ${
-                        event.riskLevel === 'Critical'
-                          ? 'bg-red-500/20 text-red-100'
-                          : event.riskLevel === 'High'
-                            ? 'bg-astro-orange/25 text-astro-cream'
+                      className={`shrink-0 rounded px-1.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider ${
+                        isCritical
+                          ? 'bg-red-500/25 text-red-200 ring-1 ring-red-500/50'
+                          : isHigh
+                            ? 'bg-astro-orange/30 text-astro-cream ring-1 ring-astro-orange/50'
                             : event.riskLevel === 'Medium'
-                              ? 'bg-astro-flame/18 text-astro-cream'
-                              : 'bg-white/12 text-white'
+                              ? 'bg-astro-flame/20 text-astro-cream'
+                              : 'bg-white/10 text-white/80'
                       }`}
                     >
                       {riskLabel(event.riskLevel)}
                     </span>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-white/78">
+                  {/* Card Metrics Grid */}
+                  <div className="mt-2 grid grid-cols-4 gap-1 rounded bg-black/25 p-1.5 text-[0.68rem]">
                     <div>
-                      <span className="block text-white/42">Distanza minima</span>
-                      {formatKm(event.minDistanceKm, 2)}
+                      <span className="block text-[0.58rem] uppercase text-white/45">Distanza</span>
+                      <span className="font-mono font-bold text-white">
+                        {formatKm(event.minDistanceKm, 1)}
+                      </span>
                     </div>
                     <div>
-                      <span className="block text-white/42">Velocità relativa</span>
-                      {formatVelocity(event.relativeVelocityKmS)}
+                      <span className="block text-[0.58rem] uppercase text-white/45">Vel. Rel.</span>
+                      <span className="font-mono font-semibold text-white/90">
+                        {formatVelocity(event.relativeVelocityKmS)}
+                      </span>
                     </div>
                     <div>
-                      <span className="block text-white/42">TCA</span>
-                      {formatDateTimeLong(event.closestApproachTime)}
+                      <span className="block text-[0.58rem] uppercase text-white/45">TCA</span>
+                      <span className="font-mono text-white/80">
+                        {formatDateTime(event.closestApproachTime)}
+                      </span>
                     </div>
                     <div>
-                      <span className="block text-white/42">Affidabilità stimata</span>
-                      {formatPercent(event.confidence)}
+                      <span className="block text-[0.58rem] uppercase text-white/45">Affidabilità</span>
+                      <span className="font-mono text-astro-cream">
+                        {formatPercent(event.confidence)}
+                      </span>
                     </div>
                   </div>
                 </button>
@@ -102,25 +133,32 @@ export default function RiskPanel({
             })}
           </div>
         ) : (
-          <div className="grid min-h-24 place-items-center rounded border border-white/10 bg-white/[0.04] p-3 text-center">
+          <div className="grid min-h-28 place-items-center rounded border border-white/10 bg-white/[0.02] p-3 text-center">
             <div>
-              <ShieldCheck className="mx-auto mb-2 text-astro-orange" size={22} />
-              <p className="text-xs font-medium text-white">No high-risk close approaches detected in this demo horizon.</p>
-              <p className="mt-1 text-[0.68rem] text-white/54">
-                Usa “Scenario sintetico” per mostrare una congiunzione dimostrativa al pubblico.
+              <ShieldCheck className="mx-auto mb-1.5 text-emerald-400" size={22} />
+              <p className="text-xs font-medium text-white">
+                Nessuna congiunzione critica nell'orizzonte impostato.
               </p>
+              {onRunScenario ? (
+                <button
+                  type="button"
+                  onClick={onRunScenario}
+                  className="mt-2.5 inline-flex items-center gap-1.5 rounded border border-astro-flame/40 bg-astro-flame/15 px-2.5 py-1 text-xs font-semibold text-astro-cream transition hover:bg-astro-flame/25"
+                >
+                  <Sparkles size={13} />
+                  Simula Allerta Congiunzione
+                </button>
+              ) : null}
             </div>
           </div>
         )}
       </div>
 
-      <div className="border-t border-white/10 px-4 py-3">
-        <div className="flex gap-2 text-[0.68rem] leading-relaxed text-white/56">
-          <AlertTriangle size={14} className="mt-0.5 shrink-0 text-astro-flame" />
-          <span>
-            Demo for outreach and educational purposes. The risk score is a simplified estimate based on
-            public orbital data and does not represent an operational collision probability.
-          </span>
+      {/* Footer Disclaimer */}
+      <div className="border-t border-white/10 bg-black/20 px-3 py-2 text-[0.62rem] text-white/50">
+        <div className="flex items-center gap-1.5 leading-relaxed">
+          <AlertTriangle size={12} className="shrink-0 text-astro-flame" />
+          <span>Demo divulgativa. Score di rischio basato su distanze minime campionate in ECI.</span>
         </div>
       </div>
     </section>

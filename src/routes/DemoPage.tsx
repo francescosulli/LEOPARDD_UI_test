@@ -3,7 +3,6 @@ import ControlPanel from '../components/ControlPanel';
 import GlobeScene from '../components/GlobeScene';
 import LoadingOverlay from '../components/LoadingOverlay';
 import RiskPanel from '../components/RiskPanel';
-import TelemetryPanel from '../components/TelemetryPanel';
 import TopBar from '../components/TopBar';
 import { fetchDebrisCatalog } from '../services/celestrak';
 import { detectConjunctions } from '../services/conjunction';
@@ -109,9 +108,15 @@ export default function DemoPage() {
   );
 
   const initializeCurrentView = useCallback(
-    (objects: DebrisObject[], maxDebris = DEFAULT_SETTINGS.maxDebris) => {
+    (objects: DebrisObject[], maxDebris = DEFAULT_SETTINGS.maxDebris, satelliteInput = input) => {
       const now = new Date();
-      const user = propagateSyntheticState(DEFAULT_INPUT, now, now, DEFAULT_INPUT.name);
+      let user: SatelliteState;
+      try {
+        const userStatesNow = propagateUserSatellite(satelliteInput, [now]);
+        user = userStatesNow[0];
+      } catch {
+        user = propagateSyntheticState(satelliteInput, now, now, satelliteInput.name);
+      }
       const propagatedDebris = propagateDebrisCatalog(objects, [now], maxDebris);
 
       setSceneDebris(propagatedDebris.objects);
@@ -123,7 +128,7 @@ export default function DemoPage() {
       setFrameIndex(0);
       setIsPlaying(false);
     },
-    [],
+    [input],
   );
 
   useEffect(() => {
@@ -245,38 +250,35 @@ export default function DemoPage() {
         debrisCount={sceneDebris.length}
         isPlaying={isPlaying}
       />
-      <div className="absolute bottom-3 left-3 right-3 top-24 z-20 grid grid-rows-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-3 lg:bottom-4 lg:left-auto lg:right-4 lg:w-[380px] lg:grid-rows-[minmax(0,1.35fr)_minmax(0,0.95fr)] lg:gap-4">
-        <ControlPanel
-          input={input}
-          setInput={setInput}
-          settings={settings}
-          setSettings={setSettings}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          speed={speed}
-          setSpeed={setSpeed}
-          scenarioActive={scenarioActive}
-          isPropagating={isPropagating}
-          inputError={inputError}
-          onPropagate={runPropagation}
-          onReset={handleReset}
-          onScenario={handleScenario}
-        />
-        <RiskPanel
-          events={events}
-          selectedEventId={selectedEventId}
-          onSelect={(event) => setSelectedEventId(event.id)}
-          isPropagating={isPropagating}
-        />
+      <div className="absolute bottom-3 right-3 top-20 z-20 flex w-[440px] max-w-[calc(100vw-24px)] flex-col gap-3 lg:bottom-4 lg:right-4 lg:w-[470px]">
+        <div className="min-h-0 flex-[1.15]">
+          <ControlPanel
+            input={input}
+            setInput={setInput}
+            settings={settings}
+            setSettings={setSettings}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            speed={speed}
+            setSpeed={setSpeed}
+            scenarioActive={scenarioActive}
+            isPropagating={isPropagating}
+            inputError={inputError}
+            onPropagate={runPropagation}
+            onReset={handleReset}
+            onScenario={handleScenario}
+          />
+        </div>
+        <div className="min-h-0 flex-1">
+          <RiskPanel
+            events={events}
+            selectedEventId={selectedEventId}
+            onSelect={(event) => setSelectedEventId(event.id)}
+            isPropagating={isPropagating}
+            onRunScenario={handleScenario}
+          />
+        </div>
       </div>
-      <TelemetryPanel
-        dataStatus={dataStatus}
-        message={catalogMessage}
-        currentFrame={currentFrame}
-        userState={currentUserState}
-        selectedEvent={selectedEvent}
-        skipped={skippedDebris}
-      />
       <LoadingOverlay
         visible={isLoadingCatalog || isPropagating}
         message={isLoadingCatalog ? 'Acquiring orbital catalog...' : 'Propagating orbital states...'}
