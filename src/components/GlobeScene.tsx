@@ -144,7 +144,7 @@ export default function GlobeScene({
   const pulse = selectedEvent?.riskLevel === 'Critical' || selectedEvent?.riskLevel === 'High';
 
   return (
-    <div className="absolute inset-0 bg-astro-950">
+    <div className="absolute inset-0 bg-astro-950 lg:right-[486px]">
       <Canvas camera={{ position: [0, 4.4, 7.2], fov: 46 }} gl={{ antialias: true, alpha: false }}>
         <color attach="background" args={['#030711']} />
         <fog attach="fog" args={[new Color('#030711'), 8, 18]} />
@@ -176,7 +176,7 @@ export default function GlobeScene({
       </Canvas>
       <div className="pointer-events-none absolute inset-0 grid-mask opacity-60" />
       <div className="pointer-events-none absolute inset-0 scanlines" />
-      <div className="pointer-events-none absolute left-5 top-5 rounded border border-astro-orange/15 bg-black/24 px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-white/70">
+      <div className="pointer-events-none absolute left-5 top-24 rounded border border-astro-orange/15 bg-black/24 px-3 py-2 text-[0.68rem] uppercase tracking-[0.18em] text-white/70">
         Oggetti renderizzati: {debrisObjects.length}
       </div>
     </div>
