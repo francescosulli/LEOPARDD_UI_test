@@ -26,7 +26,7 @@ export default function LandingPage() {
   return (
     <main className="relative h-screen overflow-hidden bg-astro-950 text-white">
       <OrbitalBackdrop />
-      <header className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between gap-3 px-6 py-5 sm:px-8">
+      <header className="pointer-events-auto absolute left-0 right-0 top-0 z-30 flex items-center justify-between gap-3 px-6 py-5 sm:px-8">
         <AstreoLogo />
         <div className="flex items-center gap-3">
           <div className="hidden rounded border border-astro-orange/18 bg-white/[0.04] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/64 sm:block">
@@ -45,7 +45,7 @@ export default function LandingPage() {
             className="max-w-3xl"
           >
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-astro-orange/22 bg-astro-orange/10 px-3 py-2 text-xs uppercase tracking-[0.2em] text-white/72">
-              ASTREO / LEOPARDD Demo
+              {t('landing.tag')}
             </div>
             <p className="text-sm font-semibold uppercase tracking-[0.32em] text-astro-orange">
               LEOPARDD
@@ -54,8 +54,7 @@ export default function LandingPage() {
               LEOPARDD Demo
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
-              Explore a simplified Space Situational Awareness environment: visualize space debris,
-              insert a satellite, propagate its orbit, and identify possible close approaches.
+              {t('landing.description')}
             </p>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-white/54">
               Low Earth Orbit Prediction and Analysis of Radar-Detected Debris

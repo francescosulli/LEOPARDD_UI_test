@@ -6,6 +6,14 @@ export const translations = {
     it: 'Demo pubblica non operativa',
     en: 'Non-operational public demo',
   },
+  'landing.tag': {
+    it: 'ASTREO / Demo LEOPARDD',
+    en: 'ASTREO / LEOPARDD Demo',
+  },
+  'landing.description': {
+    it: 'Esplora un ambiente semplificato di Space Situational Awareness: visualizza i detriti spaziali, inserisci un satellite, propaga la sua orbita e individua i possibili passaggi ravvicinati.',
+    en: 'Explore a simplified Space Situational Awareness environment: visualize space debris, insert a satellite, propagate its orbit, and identify possible close approaches.',
+  },
   'landing.cta': {
     it: 'Fai partire la demo',
     en: 'Launch the demo',
